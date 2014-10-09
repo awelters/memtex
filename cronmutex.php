@@ -22,7 +22,7 @@ function main($config, $memcache_server, $mutex_name, $min_delay)
     $mtex->verbose(false);
 
     // err on the side of caution, don't run if we can't contact the memcache server
-    if ($mtex->connect($config[$memcache_server]['memcache_server'], $config[$memcache_server]['memcache_port']) == false)
+    if ($mtex->connect($config[$memcache_server]) == false)
     {
         fprintf(STDERR, "ERROR: Couldn't connect to memcache\n");
         exit(1);
@@ -99,8 +99,7 @@ $config = array
 (
     'default' => array
     (
-        'memcache_server' => '127.0.0.1',
-        'memcache_port' => 11211,
+        array('host' => '127.0.0.1', 'port' => 11211)
     ),
 );
 
