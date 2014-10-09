@@ -1,5 +1,16 @@
 memtex
 ======
+Simple utility to allow multiple servers to have the same cron job scheduled, but only one of them run the job.
+For this to be effective, all servers must use an NTP time source to keep relatively in time sync. The min delay 
+variable is used to allow for a small amount of time variation (i.e. set it to 30 seconds), so this means that
+the task will not be run if the server gets the lock, but the task "last ran time" was within the last 30 seconds.
+We use an extra memcache metadata key to store this "last ran time" value for the other servers to test.
+
+This script will not run the task itself, it will return 0 (success) or 1 (failure), so use it with the shell && operator, for example as below:
+
+Example: cronmutex.php default randommutexname 30 && echo hi
+
+======
 
 Copyright (c) 2012, Locatrix Communications
 All rights reserved.
