@@ -24,7 +24,7 @@ class Memtex
             $this->verbose_output("connect(): Connecting to ".$server['host'].":".$server['port']);
         }
         
-        if ($this->mcache->is_connected() === false)
+        if ($this->is_connected() === false)
         {
             $this->verbose_output("connect(): returning false, can't connect to servers");
             return false;
@@ -41,16 +41,18 @@ class Memtex
      */
     public function is_connected()
     {
-        $result = $this->mcache->getExtendedStats();
+        $result = @$this->mcache->getExtendedStats();
         $canconnect = false;
 
-        foreach($result as $server => $stats) {
-            if($stats) {
-                $canconnect = true;
-                break;
+        if($result) {
+            foreach($result as $server => $stats) {
+                if($stats) {
+                    $canconnect = true;
+                    break;
+                }
             }
         }
-
+        
         return $canconnect;
     }
     
@@ -73,7 +75,7 @@ class Memtex
         
         $this->verbose_output("lock(): lockvalue: $lockvalue");
         
-        if ($this->mcache->is_connected() === false)
+        if ($this->is_connected() === false)
         {
             $this->verbose_output("lock(): returning false due to memcache = false");
             return false;
@@ -107,7 +109,7 @@ class Memtex
     {
         $this->verbose_output("get_lock_metadata() called: name - $name");
         
-        if($this->mcache->is_connected() === false) 
+        if($this->is_connected() === false) 
         {
             $this->verbose_output("get_lock_metadata(): returning false due to memcache = false");
             return false;
@@ -138,7 +140,7 @@ class Memtex
     {
         $this->verbose_output("set_lock_metadata() called: name - $name, data - $data, expire - $expire");
         
-        if($this->mcache->is_connected() === false) 
+        if($this->is_connected() === false) 
         {
             $this->verbose_output("set_lock_metadata(): returning false due to memcache = false");
             return false;
@@ -166,7 +168,7 @@ class Memtex
     {
         $this->verbose_output("unlock() called: name - $name");
         
-        if($this->mcache->is_connected() === false) 
+        if($this->is_connected() === false) 
         {
             $this->verbose_output("unlock(): returning false due to memcache = false");
             return false;
